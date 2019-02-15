@@ -1,3 +1,5 @@
+package web_handlers;
+
 public class URLs {
     private static final String ROOT_URL = "https://api.themoviedb.org/3";
     private static final String API_KEY = "d010fc2ff3d1ee669b5775e7066c41bf";

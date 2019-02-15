@@ -16,26 +16,24 @@ import java.util.List;
 import interfaces.OnLoadMoreListener;
 import models.SeriesModel;
 
-
 public class SeriesAdapter extends RecyclerView.Adapter<SeriesAdapter.ViewHolder> {
 
     private List<SeriesModel> seriesModels;
     private Context context;
     private RecyclerView recyclerView;
     private OnLoadMoreListener onLoadMoreListener;
+    private int totalItemCount, visibleThreshold,lastVisibleItem;
 
 
-    public SeriesAdapter(Context context, List<SeriesModel> seriesModels, RecyclerView recyclerView) {
-        this.seriesModels = seriesModels;
+    public SeriesAdapter(Context context, RecyclerView recyclerView) {
         this.context = context;
         this.recyclerView = recyclerView;
-
+        visibleThreshold = 5;
 
         if (recyclerView.getLayoutManager() instanceof LinearLayoutManager) {
 
             final LinearLayoutManager linearLayoutManager = (LinearLayoutManager) recyclerView
                     .getLayoutManager();
-
 
             recyclerView.addOnScrollListener(new RecyclerView.OnScrollListener() {
                 @Override
@@ -43,21 +41,28 @@ public class SeriesAdapter extends RecyclerView.Adapter<SeriesAdapter.ViewHolder
                                        int dx, int dy) {
                     super.onScrolled(recyclerView, dx, dy);
 
-//                    totalItemCount = linearLayoutManager.getItemCount();
-//                    lastVisibleItem = linearLayoutManager
-//                            .findLastVisibleItemPosition();
-//                    if ( totalItemCount <= (lastVisibleItem + visibleThreshold)) {
-//                        // End has been reached
-//                        // Do something
-//                        if (onLoadMoreListener != null) {
-//                            onLoadMoreListener.onLoadMore();
-//                        }
-//                    }
+                    totalItemCount = linearLayoutManager.getItemCount();
+                    lastVisibleItem = linearLayoutManager
+                            .findLastVisibleItemPosition();
+                    if ( totalItemCount <= (lastVisibleItem + visibleThreshold)) {
+                        // End has been reached
+                        // Do something
+                        if (onLoadMoreListener != null) {
+                            onLoadMoreListener.onLoadMore();
+                        }
+                    }
                 }
             });
         }
     }
 
+    public void setDataSet(List<SeriesModel> seriesModels) {
+        this.seriesModels = seriesModels;
+    }
+
+    public void setOnLoadMoreListener(OnLoadMoreListener onLoadMoreListener) {
+        this.onLoadMoreListener = onLoadMoreListener;
+    }
 
     @Override
     public SeriesAdapter.ViewHolder onCreateViewHolder(ViewGroup parent, int viewType) {
@@ -74,7 +79,10 @@ public class SeriesAdapter extends RecyclerView.Adapter<SeriesAdapter.ViewHolder
 
     @Override
     public int getItemCount() {
-        return seriesModels.size();
+        if (seriesModels == null)
+            return 0;
+        else
+            return seriesModels.size();
     }
 
     class ViewHolder extends RecyclerView.ViewHolder {
@@ -93,7 +101,7 @@ public class SeriesAdapter extends RecyclerView.Adapter<SeriesAdapter.ViewHolder
 
         public void fill(int position) {
             txtName.setText(seriesModels.get(position).getName());
-            txtGenres.setText(seriesModels.get(position).getGenres().get(0));
+            txtGenres.setText(seriesModels.get(position).getGenres().get(0) + "");
             txtLang.setText(seriesModels.get(position).getOrigLang());
             txtVotes.setText(seriesModels.get(position).getVoteAvg() + "");
             //TODO:: set image
