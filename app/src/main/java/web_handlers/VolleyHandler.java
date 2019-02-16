@@ -22,8 +22,10 @@ import java.util.List;
 import java.util.Map;
 
 import models.GenreModel;
+import models.SeriesDetailModel;
 import models.SeriesModel;
 import web_handlers.interfaces.IGetGenresList;
+import web_handlers.interfaces.IGetSeriesDetail;
 import web_handlers.interfaces.IGetSeriesList;
 
 public class VolleyHandler {
@@ -188,5 +190,57 @@ public class VolleyHandler {
 
         addToRequestQueue(jsonRequest);
     }
+
+
+    public void getSeriesDetails(final IGetSeriesDetail callback, int id) {
+        String url = URLs.ROOT_URL + "/tv" + id + URLs.SECOND_PART_OF_URL;
+
+        JsonObjectRequest jsonRequest = new JsonObjectRequest(Request.Method.GET, url, null
+                , new Response.Listener<JSONObject>() {
+            @Override
+            public void onResponse(JSONObject response) {
+
+                try {
+                    SeriesDetailModel seriesDetailModel;
+
+
+//                    callback.getSeriesDetailResponse(seriesDetailModel, 1, "");
+
+
+                } catch (Exception e) {
+                    e.printStackTrace();
+                    callback.getSeriesDetailResponse(null, -6, "");
+                }
+            }
+        },
+
+                new Response.ErrorListener() {
+                    @Override
+                    public void onErrorResponse(VolleyError error) {
+                        if (error instanceof AuthFailureError) {
+                            callback.getSeriesDetailResponse(null, -1, "");
+                        } else if (error instanceof ServerError) {
+                            callback.getSeriesDetailResponse(null, -2, "");
+                        } else if (error instanceof NetworkError) {
+                            callback.getSeriesDetailResponse(null, -3, "");
+                        } else {
+                            callback.getSeriesDetailResponse(null, -5, "");
+                        }
+                    }
+                }) {
+
+            @Override
+            public Map<String, String> getHeaders() throws AuthFailureError {
+                Map<String, String> params = new HashMap<String, String>();
+                params.put("Content-Type", "application/json");
+                return params;
+            }
+        };
+        jsonRequest.setRetryPolicy(new DefaultRetryPolicy(10000, 2, DefaultRetryPolicy.DEFAULT_BACKOFF_MULT));
+
+
+        addToRequestQueue(jsonRequest);
+    }
+
 
 }

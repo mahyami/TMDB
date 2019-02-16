@@ -1,3 +1,5 @@
 <resources>
     <string name="app_name">TMDB</string>
+    <string name="fragment_not_found">Fragment not found</string>
+    <string name="new_data">New data fetched</string>
 </resources>
