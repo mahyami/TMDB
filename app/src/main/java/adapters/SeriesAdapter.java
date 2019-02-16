@@ -14,15 +14,17 @@ import com.swapcard.tmdb.R;
 import java.util.List;
 
 import interfaces.OnLoadMoreListener;
+import models.GenreModel;
 import models.SeriesModel;
 
 public class SeriesAdapter extends RecyclerView.Adapter<SeriesAdapter.ViewHolder> {
 
     private List<SeriesModel> seriesModels;
+    private List<GenreModel> genreModels;
     private Context context;
     private RecyclerView recyclerView;
     private OnLoadMoreListener onLoadMoreListener;
-    private int totalItemCount, visibleThreshold,lastVisibleItem;
+    private int totalItemCount, visibleThreshold, lastVisibleItem;
 
 
     public SeriesAdapter(Context context, RecyclerView recyclerView) {
@@ -44,7 +46,7 @@ public class SeriesAdapter extends RecyclerView.Adapter<SeriesAdapter.ViewHolder
                     totalItemCount = linearLayoutManager.getItemCount();
                     lastVisibleItem = linearLayoutManager
                             .findLastVisibleItemPosition();
-                    if ( totalItemCount <= (lastVisibleItem + visibleThreshold)) {
+                    if (totalItemCount <= (lastVisibleItem + visibleThreshold)) {
                         // End has been reached
                         // Do something
                         if (onLoadMoreListener != null) {
@@ -59,6 +61,11 @@ public class SeriesAdapter extends RecyclerView.Adapter<SeriesAdapter.ViewHolder
     public void setDataSet(List<SeriesModel> seriesModels) {
         this.seriesModels = seriesModels;
     }
+
+    public void setGenre(List<GenreModel> genreModels) {
+        this.genreModels = genreModels;
+    }
+
 
     public void setOnLoadMoreListener(OnLoadMoreListener onLoadMoreListener) {
         this.onLoadMoreListener = onLoadMoreListener;
@@ -101,7 +108,16 @@ public class SeriesAdapter extends RecyclerView.Adapter<SeriesAdapter.ViewHolder
 
         public void fill(int position) {
             txtName.setText(seriesModels.get(position).getName());
-//            txtGenres.setText(seriesModels.get(position).getGenres().get(0) + "");
+            StringBuilder stringBuilder = new StringBuilder();
+            for (int i = 0; i < seriesModels.get(position).getGenres().size(); i++) {
+                for (int j = 0; j < genreModels.size(); j++) {
+                    if (seriesModels.get(position).getGenres().get(i).equals(genreModels.get(j).getId())) {
+                            stringBuilder.append(genreModels.get(j).getValue()+", " );
+                    }
+                }
+            }
+            //TODO: set background for genres
+            txtGenres.setText(stringBuilder);
             txtLang.setText(seriesModels.get(position).getOrigLang());
             txtVotes.setText(seriesModels.get(position).getVoteAvg() + "");
             //TODO:: set image

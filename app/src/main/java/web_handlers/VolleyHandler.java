@@ -21,8 +21,10 @@ import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 
+import models.GenreModel;
 import models.SeriesModel;
-import web_handlers.interfaces.ISeriesList;
+import web_handlers.interfaces.IGetGenresList;
+import web_handlers.interfaces.IGetSeriesList;
 
 public class VolleyHandler {
     private static VolleyHandler mInstance;
@@ -43,8 +45,6 @@ public class VolleyHandler {
 
     private RequestQueue getRequestQueue() {
         if (mRequestQueue == null) {
-            // getApplicationContext() is key, it keeps you from leaking the
-            // Activity or BroadcastReceiver if someone passes one in.
             mRequestQueue = Volley.newRequestQueue(mCtx.getApplicationContext());
         }
         return mRequestQueue;
@@ -54,7 +54,7 @@ public class VolleyHandler {
         getRequestQueue().add(req);
     }
 
-    public void getSeries(final ISeriesList callback, int pageNum) {
+    public void getSeries(final IGetSeriesList callback, int pageNum) {
         String url = URLs.POPULAR_SERIES + pageNum;
 
         JsonObjectRequest jsonRequest = new JsonObjectRequest(Request.Method.GET, url, null
@@ -89,12 +89,12 @@ public class VolleyHandler {
                         seriesModels.add(seriesModel);
                     }
 
-                    callback.seriesListResponse(seriesModels, 1, "");
+                    callback.getSeriesListResponse(seriesModels, 1, "");
 
 
                 } catch (Exception e) {
                     e.printStackTrace();
-                    callback.seriesListResponse(null, -6, "");
+                    callback.getSeriesListResponse(null, -6, "");
                 }
             }
         },
@@ -103,13 +103,13 @@ public class VolleyHandler {
                     @Override
                     public void onErrorResponse(VolleyError error) {
                         if (error instanceof AuthFailureError) {
-                            callback.seriesListResponse(null, -1, "");
+                            callback.getSeriesListResponse(null, -1, "");
                         } else if (error instanceof ServerError) {
-                            callback.seriesListResponse(null, -2, "");
+                            callback.getSeriesListResponse(null, -2, "");
                         } else if (error instanceof NetworkError) {
-                            callback.seriesListResponse(null, -3, "");
+                            callback.getSeriesListResponse(null, -3, "");
                         } else {
-                            callback.seriesListResponse(null, -5, "");
+                            callback.getSeriesListResponse(null, -5, "");
                         }
                     }
                 }) {
@@ -121,8 +121,70 @@ public class VolleyHandler {
                 return params;
             }
         };
-        jsonRequest.setRetryPolicy(new DefaultRetryPolicy( 10000, 2, DefaultRetryPolicy.DEFAULT_BACKOFF_MULT));
+        jsonRequest.setRetryPolicy(new DefaultRetryPolicy(10000, 2, DefaultRetryPolicy.DEFAULT_BACKOFF_MULT));
 
+
+        addToRequestQueue(jsonRequest);
+    }
+
+    public void getGenres(final IGetGenresList callback) {
+        String url = URLs.GENRES;
+
+        JsonObjectRequest jsonRequest = new JsonObjectRequest(Request.Method.GET, url, null
+                , new Response.Listener<JSONObject>() {
+            @Override
+            public void onResponse(JSONObject response) {
+
+                try {
+                    JSONArray array = response.getJSONArray("genres");
+                    List<GenreModel> genreModels = new ArrayList<>();
+                    GenreModel genreModel;
+                    JSONObject tempObject;
+                    final int numberOfItemsInResp = array.length();
+
+                    for (int i = 0; i < numberOfItemsInResp; i++) {
+                        tempObject = array.getJSONObject(i);
+
+                        genreModel = new GenreModel(tempObject.getInt("id"),
+                                tempObject.getString("name")
+                        );
+
+                        genreModels.add(genreModel);
+                    }
+
+                    callback.getGenreListResponse(genreModels, 1, "");
+
+
+                } catch (Exception e) {
+                    e.printStackTrace();
+                    callback.getGenreListResponse(null, -6, "");
+                }
+            }
+        },
+
+                new Response.ErrorListener() {
+                    @Override
+                    public void onErrorResponse(VolleyError error) {
+                        if (error instanceof AuthFailureError) {
+                            callback.getGenreListResponse(null, -1, "");
+                        } else if (error instanceof ServerError) {
+                            callback.getGenreListResponse(null, -2, "");
+                        } else if (error instanceof NetworkError) {
+                            callback.getGenreListResponse(null, -3, "");
+                        } else {
+                            callback.getGenreListResponse(null, -5, "");
+                        }
+                    }
+                }) {
+
+            @Override
+            public Map<String, String> getHeaders() throws AuthFailureError {
+                Map<String, String> params = new HashMap<String, String>();
+                params.put("Content-Type", "application/json");
+                return params;
+            }
+        };
+        jsonRequest.setRetryPolicy(new DefaultRetryPolicy(10000, 2, DefaultRetryPolicy.DEFAULT_BACKOFF_MULT));
 
         addToRequestQueue(jsonRequest);
     }
