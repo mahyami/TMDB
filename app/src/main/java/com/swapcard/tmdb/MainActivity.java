@@ -18,11 +18,14 @@ import web_handlers.VolleyHandler;
 import web_handlers.interfaces.ISeriesList;
 
 public class MainActivity extends AppCompatActivity implements ISeriesList<SeriesModel> {
+    private static final int PAGE_FRACTION = 20;
     private RecyclerView recyclerView;
     private SeriesAdapter seriesAdapter;
     private List<SeriesModel> seriesModels;
     private int pageNum = 1;
     private ProgressBar pb1, pb2;
+    private boolean isLoadingMoreORnoItem = false;
+
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -39,13 +42,34 @@ public class MainActivity extends AppCompatActivity implements ISeriesList<Serie
         VolleyHandler.getInstance(this).getSeries(this, pageNum);
         recyclerView.setLayoutManager(new LinearLayoutManager(this));
         recyclerView.setAdapter(seriesAdapter);
-        recyclerView.addOnScrollListener(new EndlessRecyclerViewScrollListener(new LinearLayoutManager(this)) {
+        recyclerView.addOnScrollListener(new RecyclerView.OnScrollListener() {
             @Override
-            public void onLoadMore(int page, int totalItemsCount, RecyclerView view) {
-                pb2.setVisibility(View.VISIBLE);
-                VolleyHandler.getInstance(MainActivity.this).getSeries(MainActivity.this, page);
+            public void onScrollStateChanged(RecyclerView recyclerView, int newState) {
+                super.onScrollStateChanged(recyclerView, newState);
+
+                if (isLoadingMoreORnoItem)
+                    return;
+                LinearLayoutManager layoutManager = (LinearLayoutManager) recyclerView.getLayoutManager();
+                int visibleItemCount = layoutManager.getChildCount();
+                int totalItemCount = layoutManager.getItemCount();
+                int passedVisibleItems = layoutManager.findLastVisibleItemPosition();
+
+                if (totalItemCount % PAGE_FRACTION != 0) {
+                    isLoadingMoreORnoItem = true;
+                    recyclerView.setPadding(0, getResources().getDimensionPixelSize(R.dimen.half_base_margin), 0, 0);
+                } else if (passedVisibleItems + visibleItemCount >= totalItemCount) {
+                    pb2.setVisibility(View.VISIBLE);
+                    isLoadingMoreORnoItem = true;
+                    pageNum++;
+                    VolleyHandler.getInstance(MainActivity.this).getSeries(MainActivity.this, pageNum);
+                    pb2.setVisibility(View.VISIBLE);
+                }
             }
 
+            @Override
+            public void onScrolled(RecyclerView recyclerView, int dx, int dy) {
+                super.onScrolled(recyclerView, dx, dy);
+            }
         });
 
 
@@ -58,10 +82,20 @@ public class MainActivity extends AppCompatActivity implements ISeriesList<Serie
         pb2.setVisibility(View.GONE);
 
         Toast.makeText(this, statusMsg + "  " + statusCode, Toast.LENGTH_LONG).show();
-        seriesModels = seriesList;
-        seriesAdapter.setDataSet(seriesModels);
-        seriesAdapter.notifyDataSetChanged();
+        if (statusCode == 1) {
+
+            if (seriesModels == null)
+                seriesModels = seriesList;
+            else
+                seriesModels.addAll(seriesList);
 
 
+            seriesAdapter.setDataSet(seriesModels);
+            seriesAdapter.notifyDataSetChanged();
+        }
+        isLoadingMoreORnoItem = false;
     }
+
+
 }
+

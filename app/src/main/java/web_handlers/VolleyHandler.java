@@ -3,6 +3,7 @@ package web_handlers;
 import android.content.Context;
 
 import com.android.volley.AuthFailureError;
+import com.android.volley.DefaultRetryPolicy;
 import com.android.volley.NetworkError;
 import com.android.volley.Request;
 import com.android.volley.RequestQueue;
@@ -93,7 +94,7 @@ public class VolleyHandler {
 
                 } catch (Exception e) {
                     e.printStackTrace();
-                    callback.seriesListResponse(null, -5, "");
+                    callback.seriesListResponse(null, -6, "");
                 }
             }
         },
@@ -120,6 +121,8 @@ public class VolleyHandler {
                 return params;
             }
         };
+        jsonRequest.setRetryPolicy(new DefaultRetryPolicy( 10000, 2, DefaultRetryPolicy.DEFAULT_BACKOFF_MULT));
+
 
         addToRequestQueue(jsonRequest);
     }

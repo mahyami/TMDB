@@ -101,7 +101,7 @@ public class SeriesAdapter extends RecyclerView.Adapter<SeriesAdapter.ViewHolder
 
         public void fill(int position) {
             txtName.setText(seriesModels.get(position).getName());
-            txtGenres.setText(seriesModels.get(position).getGenres().get(0) + "");
+//            txtGenres.setText(seriesModels.get(position).getGenres().get(0) + "");
             txtLang.setText(seriesModels.get(position).getOrigLang());
             txtVotes.setText(seriesModels.get(position).getVoteAvg() + "");
             //TODO:: set image
