@@ -9,6 +9,7 @@ import android.view.ViewGroup;
 import android.widget.ImageView;
 import android.widget.TextView;
 
+import com.bumptech.glide.Glide;
 import com.swapcard.tmdb.R;
 
 import java.util.List;
@@ -16,6 +17,7 @@ import java.util.List;
 import interfaces.OnLoadMoreListener;
 import models.GenreModel;
 import models.SeriesModel;
+import web_handlers.URLs;
 
 public class SeriesAdapter extends RecyclerView.Adapter<SeriesAdapter.ViewHolder> {
 
@@ -112,7 +114,7 @@ public class SeriesAdapter extends RecyclerView.Adapter<SeriesAdapter.ViewHolder
             for (int i = 0; i < seriesModels.get(position).getGenres().size(); i++) {
                 for (int j = 0; j < genreModels.size(); j++) {
                     if (seriesModels.get(position).getGenres().get(i).equals(genreModels.get(j).getId())) {
-                            stringBuilder.append(genreModels.get(j).getValue()+", " );
+                        stringBuilder.append(genreModels.get(j).getValue() + ", ");
                     }
                 }
             }
@@ -120,7 +122,8 @@ public class SeriesAdapter extends RecyclerView.Adapter<SeriesAdapter.ViewHolder
             txtGenres.setText(stringBuilder);
             txtLang.setText(seriesModels.get(position).getOrigLang());
             txtVotes.setText(seriesModels.get(position).getVoteAvg() + "");
-            //TODO:: set image
+            Glide.with(context).load(URLs.SERIESCOVER + seriesModels.get(position).getPosterPath()).into(imgPoster);
+
         }
     }
 }
