@@ -202,6 +202,25 @@ public class VolleyHandler {
 
                 try {
                     SeriesDetailModel seriesDetailModel;
+                    SeriesModel seriesModel;
+                    List<GenreModel> genresList = new ArrayList<>();
+
+
+                    for (int i = 0; i < response.getJSONArray("genres").length(); i++) {
+                        JSONObject jsonObject = response.getJSONArray("genres").getJSONObject(i);
+                        GenreModel genreModel = new GenreModel(jsonObject.getInt("id"),
+                                jsonObject.getString("name"));
+
+                        genresList.add(genreModel);
+                    }
+
+                    seriesModel = new SeriesModel(response.getInt("id"),
+                            response.getString("name"),
+                            null,
+                            response.getString("original_language"),
+                            response.getString("poster_path"),
+                            response.getDouble("vote_average")
+                    );
 
 
 //                    callback.getSeriesDetailResponse(seriesDetailModel, 1, "");

@@ -1,44 +1,59 @@
 package models;
 
-public class SeriesDetailModel {
-    private String backDropPath;
-    private Double voteAvg;
-    private String firstAirDate;
-    private int voteCount;
-    private String overview;
-    private String origName;
+import java.util.List;
 
-    public SeriesDetailModel(String backDropPath, Double voteAvg, String firstAirDate,
-                             int voteCount, String overview, String origName) {
+public class SeriesDetailModel {
+    private SeriesModel seriesModel;
+    private String backDropPath;
+    private String overview;
+    private String firstAirDate;
+    private boolean inProduction;
+    private List<GenreModel> genreModels;
+    private List<GenericModel> creatorModels;
+    private List<GenericModel> companyModels;
+
+    public SeriesDetailModel(SeriesModel seriesModel, String backDropPath, String overview,
+                             String firstAirDate, boolean inProduction,
+                             List<GenreModel> genreModels, List<GenericModel> creatorModels, List<GenericModel> companyModels) {
+        this.seriesModel = seriesModel;
         this.backDropPath = backDropPath;
-        this.voteAvg = voteAvg;
-        this.firstAirDate = firstAirDate;
-        this.voteCount = voteCount;
         this.overview = overview;
-        this.origName = origName;
+        this.firstAirDate = firstAirDate;
+        this.inProduction = inProduction;
+        this.genreModels = genreModels;
+        this.creatorModels = creatorModels;
+        this.companyModels = companyModels;
+    }
+
+    public SeriesModel getSeriesModel() {
+        return seriesModel;
     }
 
     public String getBackDropPath() {
         return backDropPath;
     }
 
-    public Double getVoteAvg() {
-        return voteAvg;
+    public String getOverview() {
+        return overview;
     }
 
     public String getFirstAirDate() {
         return firstAirDate;
     }
 
-    public int getVoteCount() {
-        return voteCount;
+    public boolean isInProduction() {
+        return inProduction;
     }
 
-    public String getOverview() {
-        return overview;
+    public List<GenericModel> getCreatorModels() {
+        return creatorModels;
     }
 
-    public String getOrigName() {
-        return origName;
+    public List<GenericModel> getCompanyModels() {
+        return companyModels;
+    }
+
+    public List<GenreModel> getGenreModels() {
+        return genreModels;
     }
 }
