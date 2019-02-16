@@ -114,7 +114,10 @@ public class SeriesAdapter extends RecyclerView.Adapter<SeriesAdapter.ViewHolder
             for (int i = 0; i < seriesModels.get(position).getGenres().size(); i++) {
                 for (int j = 0; j < genreModels.size(); j++) {
                     if (seriesModels.get(position).getGenres().get(i).equals(genreModels.get(j).getId())) {
-                        stringBuilder.append(genreModels.get(j).getValue() + ", ");
+                        if (i == seriesModels.get(position).getGenres().size() - 1)
+                            stringBuilder.append(genreModels.get(j).getValue());
+                        else
+                            stringBuilder.append(genreModels.get(j).getValue() + ", ");
                     }
                 }
             }
