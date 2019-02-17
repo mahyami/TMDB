@@ -5,6 +5,7 @@ import android.support.v4.app.Fragment;
 import android.support.v7.app.AppCompatActivity;
 import android.widget.Toast;
 
+import fragments.SeriesDetailFragment;
 import fragments.SeriesListFragment;
 
 public class MainActivity extends AppCompatActivity {
@@ -74,7 +75,8 @@ public class MainActivity extends AppCompatActivity {
 
         if (tag.equals(SeriesListFragment.class.toString()))
             fragment = new SeriesListFragment();
-
+        else if (tag.equals(SeriesDetailFragment.class.toString()))
+            fragment = new SeriesDetailFragment();
 
         if (fragment != null && bundle != null)
             fragment.setArguments(bundle);

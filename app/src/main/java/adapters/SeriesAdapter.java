@@ -58,6 +58,11 @@ public class SeriesAdapter extends RecyclerView.Adapter<SeriesAdapter.ViewHolder
             return seriesModels.size();
     }
 
+    public int getId(int position) {
+        return seriesModels.get(position).getId();
+    }
+
+
     class ViewHolder extends RecyclerView.ViewHolder {
         private TextView txtName, txtLang, txtVotes, txtGenres;
         private ImageView imgPoster;

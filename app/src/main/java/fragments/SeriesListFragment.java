@@ -1,6 +1,7 @@
 package fragments;
 
 import android.os.Bundle;
+import android.os.Handler;
 import android.support.annotation.NonNull;
 import android.support.annotation.Nullable;
 import android.support.v4.app.Fragment;
@@ -13,6 +14,7 @@ import android.widget.ProgressBar;
 import android.widget.Toast;
 
 import com.swapcard.tmdb.AppController;
+import com.swapcard.tmdb.MainActivity;
 import com.swapcard.tmdb.R;
 
 import java.util.ArrayList;
@@ -21,11 +23,13 @@ import java.util.List;
 import adapters.SeriesAdapter;
 import models.GenreModel;
 import models.SeriesModel;
+import util.ItemClickListener;
+import util.RecyclerTouchListener;
 import web_handlers.VolleyHandler;
 import web_handlers.interfaces.IGetGenresList;
 import web_handlers.interfaces.IGetSeriesList;
 
-public class SeriesListFragment extends Fragment implements IGetSeriesList<SeriesModel>, IGetGenresList<GenreModel> {
+public class SeriesListFragment extends Fragment implements IGetSeriesList<SeriesModel>, IGetGenresList<GenreModel> , ItemClickListener {
     private static final int PAGE_FRACTION = 20;
     private RecyclerView recyclerView;
     private SeriesAdapter seriesAdapter;
@@ -51,6 +55,7 @@ public class SeriesListFragment extends Fragment implements IGetSeriesList<Serie
         pb1 = view.findViewById(R.id.pb1);
         pb2 = view.findViewById(R.id.pb2);
         pb1.setVisibility(View.VISIBLE);
+
         seriesAdapter = new SeriesAdapter(getContext(), recyclerView);
 
         VolleyHandler.getInstance(getContext()).getGenres(this);
@@ -86,6 +91,9 @@ public class SeriesListFragment extends Fragment implements IGetSeriesList<Serie
                 super.onScrolled(recyclerView, dx, dy);
             }
         });
+
+        recyclerView.addOnItemTouchListener(new RecyclerTouchListener(AppController.getInstance(), recyclerView, this));
+
 
 
         return view;
@@ -127,5 +135,19 @@ public class SeriesListFragment extends Fragment implements IGetSeriesList<Serie
             Toast.makeText(getContext(), statusMsg + "  " + statusCode, Toast.LENGTH_LONG).show();
 
         isLoadingMoreORnoItem = false;
+    }
+
+    @Override
+    public void onItemClick(View child, int position) {
+        Bundle bundle = new Bundle();
+        bundle.putInt("series_id", seriesAdapter.getId(position));
+       ((MainActivity) getActivity()).manageFragment(
+                SeriesDetailFragment.class, true, bundle, true);
+
+    }
+
+    @Override
+    public void onItemLongClick(View child, int position) {
+
     }
 }

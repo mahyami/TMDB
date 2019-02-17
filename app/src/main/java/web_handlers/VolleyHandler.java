@@ -21,6 +21,7 @@ import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 
+import models.GenericModel;
 import models.GenreModel;
 import models.SeriesDetailModel;
 import models.SeriesModel;
@@ -193,7 +194,7 @@ public class VolleyHandler {
 
 
     public void getSeriesDetails(final IGetSeriesDetail callback, int id) {
-        String url = URLs.ROOT_URL + "/tv" + id + URLs.SECOND_PART_OF_URL;
+        String url = URLs.ROOT_URL + "/tv/" + id + URLs.SECOND_PART_OF_URL;
 
         JsonObjectRequest jsonRequest = new JsonObjectRequest(Request.Method.GET, url, null
                 , new Response.Listener<JSONObject>() {
@@ -204,6 +205,8 @@ public class VolleyHandler {
                     SeriesDetailModel seriesDetailModel;
                     SeriesModel seriesModel;
                     List<GenreModel> genresList = new ArrayList<>();
+                    List<GenericModel> cretorModels = new ArrayList<>();
+                    List<GenericModel> companyModels = new ArrayList<>();
 
 
                     for (int i = 0; i < response.getJSONArray("genres").length(); i++) {
@@ -223,7 +226,29 @@ public class VolleyHandler {
                     );
 
 
-//                    callback.getSeriesDetailResponse(seriesDetailModel, 1, "");
+                    for (int i = 0; i < response.getJSONArray("created_by").length(); i++) {
+                        JSONObject jsonObject = response.getJSONArray("created_by").getJSONObject(i);
+                        GenericModel creatorModel = new GenericModel(jsonObject.getString("profile_path"),
+                                jsonObject.getString("name"));
+
+                        cretorModels.add(creatorModel);
+                    }
+
+                    for (int i = 0; i < response.getJSONArray("production_companies").length(); i++) {
+                        JSONObject jsonObject = response.getJSONArray("production_companies").getJSONObject(i);
+                        GenericModel companyModel = new GenericModel(jsonObject.getString("logo_path"),
+                                jsonObject.getString("name"));
+
+                        companyModels.add(companyModel);
+                    }
+
+                    seriesDetailModel = new SeriesDetailModel(seriesModel,
+                            response.getString("backdrop_path"),
+                            response.getString("overview"),
+                            genresList, cretorModels, companyModels);
+
+
+                    callback.getSeriesDetailResponse(seriesDetailModel, 1, "");
 
 
                 } catch (Exception e) {

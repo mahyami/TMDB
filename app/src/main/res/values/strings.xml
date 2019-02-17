@@ -2,4 +2,8 @@
     <string name="app_name">TMDB</string>
     <string name="fragment_not_found">Fragment not found</string>
     <string name="new_data">New data fetched</string>
+    <string name="genre">Genre:</string>
+    <string name="overview">Overview: </string>
+    <string name="creators">Creators:</string>
+    <string name="production_companies">Production companies: </string>
 </resources>

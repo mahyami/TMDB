@@ -6,20 +6,16 @@ public class SeriesDetailModel {
     private SeriesModel seriesModel;
     private String backDropPath;
     private String overview;
-    private String firstAirDate;
-    private boolean inProduction;
     private List<GenreModel> genreModels;
     private List<GenericModel> creatorModels;
     private List<GenericModel> companyModels;
 
     public SeriesDetailModel(SeriesModel seriesModel, String backDropPath, String overview,
-                             String firstAirDate, boolean inProduction,
-                             List<GenreModel> genreModels, List<GenericModel> creatorModels, List<GenericModel> companyModels) {
+                             List<GenreModel> genreModels, List<GenericModel> creatorModels,
+                             List<GenericModel> companyModels) {
         this.seriesModel = seriesModel;
         this.backDropPath = backDropPath;
         this.overview = overview;
-        this.firstAirDate = firstAirDate;
-        this.inProduction = inProduction;
         this.genreModels = genreModels;
         this.creatorModels = creatorModels;
         this.companyModels = companyModels;
@@ -35,14 +31,6 @@ public class SeriesDetailModel {
 
     public String getOverview() {
         return overview;
-    }
-
-    public String getFirstAirDate() {
-        return firstAirDate;
-    }
-
-    public boolean isInProduction() {
-        return inProduction;
     }
 
     public List<GenericModel> getCreatorModels() {

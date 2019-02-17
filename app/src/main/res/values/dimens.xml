@@ -3,4 +3,7 @@
     <dimen name="half_base_margin">8dp</dimen>
     <dimen name="base_margin">16dp</dimen>
     <dimen name="half_half_base_margin">4dp</dimen>
+    <dimen name="content18">18sp</dimen>
+    <dimen name="content14">14sp</dimen>
+    <dimen name="content16">16sp</dimen>
 </resources>
