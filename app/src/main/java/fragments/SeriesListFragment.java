@@ -5,12 +5,15 @@ import android.os.Handler;
 import android.support.annotation.NonNull;
 import android.support.annotation.Nullable;
 import android.support.v4.app.Fragment;
+import android.support.v4.app.FragmentManager;
+import android.support.v4.app.FragmentTransaction;
 import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.RecyclerView;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.ProgressBar;
+import android.widget.TextView;
 import android.widget.Toast;
 
 import com.swapcard.tmdb.AppController;
@@ -29,7 +32,7 @@ import web_handlers.VolleyHandler;
 import web_handlers.interfaces.IGetGenresList;
 import web_handlers.interfaces.IGetSeriesList;
 
-public class SeriesListFragment extends Fragment implements IGetSeriesList<SeriesModel>, IGetGenresList<GenreModel> , ItemClickListener {
+public class SeriesListFragment extends Fragment implements IGetSeriesList<SeriesModel>, IGetGenresList<GenreModel>, ItemClickListener {
     private static final int PAGE_FRACTION = 20;
     private RecyclerView recyclerView;
     private SeriesAdapter seriesAdapter;
@@ -38,6 +41,7 @@ public class SeriesListFragment extends Fragment implements IGetSeriesList<Serie
     private ProgressBar pb1, pb2;
     private boolean isLoadingMoreORnoItem = false;
     private List<GenreModel> genreModels;
+    private TextView txtTryAgain;
 
     public SeriesListFragment() {
     }
@@ -47,6 +51,8 @@ public class SeriesListFragment extends Fragment implements IGetSeriesList<Serie
     public View onCreateView(@NonNull LayoutInflater inflater, @Nullable ViewGroup container, @Nullable Bundle savedInstanceState) {
         AppController.currentFragment = this;
         View view = inflater.inflate(R.layout.fragment_series_list, container, false);
+        ((MainActivity) getActivity()).getSupportActionBar().show();
+
 
         seriesModels = new ArrayList<>();
         genreModels = new ArrayList<>();
@@ -54,11 +60,14 @@ public class SeriesListFragment extends Fragment implements IGetSeriesList<Serie
         recyclerView = view.findViewById(R.id.recycler_view);
         pb1 = view.findViewById(R.id.pb1);
         pb2 = view.findViewById(R.id.pb2);
+        txtTryAgain = view.findViewById(R.id.txt_try_again);
+
         pb1.setVisibility(View.VISIBLE);
 
-        seriesAdapter = new SeriesAdapter(getContext(), recyclerView);
 
         VolleyHandler.getInstance(getContext()).getGenres(this);
+
+        seriesAdapter = new SeriesAdapter(getContext(), recyclerView);
 
         recyclerView.setLayoutManager(new LinearLayoutManager(getContext()));
         recyclerView.setAdapter(seriesAdapter);
@@ -95,6 +104,17 @@ public class SeriesListFragment extends Fragment implements IGetSeriesList<Serie
         recyclerView.addOnItemTouchListener(new RecyclerTouchListener(AppController.getInstance(), recyclerView, this));
 
 
+        txtTryAgain.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                Fragment seriesListFragment = new SeriesListFragment();
+                FragmentManager fragmentManager = getActivity().getSupportFragmentManager();
+                FragmentTransaction fragmentTransaction = fragmentManager.beginTransaction();
+                fragmentTransaction.replace(R.id.frameMain, seriesListFragment);
+                fragmentTransaction.commit();
+
+            }
+        });
 
         return view;
     }
@@ -130,9 +150,10 @@ public class SeriesListFragment extends Fragment implements IGetSeriesList<Serie
             seriesAdapter.setGenre(genreModels);
             seriesAdapter.setDataSet(seriesModels);
             seriesAdapter.notifyDataSetChanged();
-        }
-        else
+        } else {
             Toast.makeText(getContext(), statusMsg + "  " + statusCode, Toast.LENGTH_LONG).show();
+            txtTryAgain.setVisibility(View.VISIBLE);
+        }
 
         isLoadingMoreORnoItem = false;
     }
@@ -141,7 +162,7 @@ public class SeriesListFragment extends Fragment implements IGetSeriesList<Serie
     public void onItemClick(View child, int position) {
         Bundle bundle = new Bundle();
         bundle.putInt("series_id", seriesAdapter.getId(position));
-       ((MainActivity) getActivity()).manageFragment(
+        ((MainActivity) getActivity()).manageFragment(
                 SeriesDetailFragment.class, true, bundle, true);
 
     }

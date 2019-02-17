@@ -2,6 +2,7 @@
 <LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
+    android:background="@color/colorPrimaryDark"
     android:orientation="vertical">
 
 
@@ -11,9 +12,11 @@
         android:background="@color/colorPrimary">
 
         <ImageView
+            android:id="@+id/img_back"
             android:layout_width="30dp"
             android:layout_height="30dp"
             android:layout_centerVertical="true"
+            android:layout_marginLeft="@dimen/half_base_margin"
             android:src="@drawable/ic_arrow_back_black_24dp" />
 
         <TextView
@@ -26,24 +29,47 @@
             android:textSize="@dimen/content18" />
     </RelativeLayout>
 
+    <TextView
+        android:id="@+id/txt_try_again"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_margin="35dp"
+        android:background="@drawable/green_rect"
+        android:gravity="center"
+        android:padding="@dimen/base_margin"
+        android:text="@string/try_again"
+        android:textColor="@android:color/white"
+        android:textSize="@dimen/content18"
+        android:visibility="gone" />
+
+    <ProgressBar
+        android:id="@+id/pb"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_gravity="center"
+        android:layout_margin="@dimen/base_margin" />
+
     <android.support.v4.widget.NestedScrollView
         android:layout_width="match_parent"
         android:layout_height="match_parent">
 
         <LinearLayout
+            android:id="@+id/ll_master"
             android:layout_width="match_parent"
             android:layout_height="match_parent"
             android:background="@color/colorPrimaryDark"
-            android:orientation="vertical">
+            android:orientation="vertical"
+            android:visibility="gone">
 
             <ImageView
                 android:id="@+id/img_poster"
                 android:layout_width="match_parent"
                 android:layout_height="200dp" />
+
             <ImageView
                 android:layout_width="match_parent"
                 android:layout_height="2dp"
-                android:background="@color/colorAccent"/>
+                android:background="@color/colorAccent" />
 
             <RelativeLayout
                 android:layout_width="match_parent"
@@ -88,10 +114,12 @@
                     android:textSize="@dimen/content16" />
 
             </RelativeLayout>
+
             <ImageView
                 android:layout_width="match_parent"
                 android:layout_height="2dp"
-                android:background="@color/colorAccent"/>
+                android:background="@color/colorAccent" />
+
             <LinearLayout
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
@@ -104,6 +132,7 @@
                     android:gravity="center"
                     android:text="@string/genre"
                     android:textColor="@color/colorPrimary"
+                    android:textSize="@dimen/content16"
                     android:textStyle="bold" />
 
                 <android.support.v7.widget.RecyclerView
@@ -114,17 +143,20 @@
                     android:orientation="horizontal" />
 
             </LinearLayout>
+
             <ImageView
                 android:layout_width="match_parent"
                 android:layout_height="2dp"
                 android:layout_marginTop="@dimen/half_base_margin"
-                android:background="@color/colorAccent"/>
+                android:background="@color/colorAccent" />
+
             <TextView
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 android:layout_margin="@dimen/half_base_margin"
                 android:text="@string/overview"
                 android:textColor="@color/colorPrimary"
+                android:textSize="@dimen/content16"
                 android:textStyle="bold" />
 
             <TextView
@@ -134,11 +166,13 @@
                 android:layout_marginLeft="@dimen/half_base_margin"
                 android:layout_marginRight="@dimen/half_base_margin"
                 android:textColor="@android:color/white" />
+
             <ImageView
                 android:layout_width="match_parent"
                 android:layout_height="2dp"
                 android:layout_marginTop="@dimen/half_base_margin"
-                android:background="@color/colorAccent"/>
+                android:background="@color/colorAccent" />
+
             <LinearLayout
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
@@ -151,6 +185,7 @@
                     android:layout_height="wrap_content"
                     android:text="@string/creators"
                     android:textColor="@color/colorPrimary"
+                    android:textSize="@dimen/content16"
                     android:textStyle="bold" />
 
                 <android.support.v7.widget.RecyclerView
@@ -158,17 +193,21 @@
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"
                     android:layout_marginTop="@dimen/half_base_margin" />
+
                 <ImageView
+                    android:id="@+id/line"
                     android:layout_width="match_parent"
                     android:layout_height="2dp"
                     android:layout_marginTop="@dimen/half_base_margin"
-                    android:background="@color/colorAccent"/>
+                    android:background="@color/colorAccent" />
+
                 <TextView
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"
                     android:layout_marginTop="@dimen/half_base_margin"
                     android:text="@string/production_companies"
                     android:textColor="@color/colorPrimary"
+                    android:textSize="@dimen/content16"
                     android:textStyle="bold" />
 
                 <android.support.v7.widget.RecyclerView
@@ -181,7 +220,44 @@
                     android:layout_width="match_parent"
                     android:layout_height="2dp"
                     android:layout_marginTop="@dimen/half_base_margin"
-                    android:background="@color/colorAccent"/>
+                    android:background="@color/colorAccent" />
+
+                <LinearLayout
+                    android:id="@+id/ll_similar"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:orientation="vertical">
+
+                    <TextView
+                        android:id="@+id/similar"
+                        android:layout_width="match_parent"
+                        android:layout_height="wrap_content"
+                        android:layout_marginTop="@dimen/half_base_margin"
+                        android:text="@string/similar"
+                        android:textColor="@color/colorPrimary"
+                        android:textSize="@dimen/content16"
+                        android:textStyle="bold" />
+
+                    <android.support.v7.widget.RecyclerView
+                        android:id="@+id/rl_similar"
+                        android:layout_width="match_parent"
+                        android:layout_height="wrap_content"
+                        android:layout_marginTop="@dimen/half_base_margin" />
+                </LinearLayout>
+
+                <TextView
+                    android:id="@+id/txt_try_again_similar"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:layout_margin="35dp"
+                    android:background="@drawable/green_rect"
+                    android:gravity="center"
+                    android:padding="@dimen/base_margin"
+                    android:text="@string/try_again"
+                    android:textColor="@android:color/white"
+                    android:textSize="@dimen/content18"
+                    android:visibility="gone" />
+
 
             </LinearLayout>
         </LinearLayout>

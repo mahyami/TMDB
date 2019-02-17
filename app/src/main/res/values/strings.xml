@@ -6,4 +6,6 @@
     <string name="overview">Overview: </string>
     <string name="creators">Creators:</string>
     <string name="production_companies">Production companies: </string>
+    <string name="similar">Similar TV shows:</string>
+    <string name="try_again">Try Again</string>
 </resources>
